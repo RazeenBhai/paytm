@@ -9,6 +9,6 @@ app.use(express.json());
 
 
 app.use("/api/v1", rootRouter);
-app.use("/api/v1", accountRouter);
+app.use("/api/v1/account", accountRouter);
 
 app.listen(3000);
