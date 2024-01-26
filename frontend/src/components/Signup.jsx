@@ -1,6 +1,19 @@
-import React from "react";
-import {Link} from "react-router-dom"
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { firstNameAtom, lastNameAtom, passwordAtom, usernameAtom } from "../store";
+import { useRecoilState } from "recoil";
 const Signup = () => {
+
+  const [username, setUsername] = useRecoilState(usernameAtom);
+  const [password, setPassword] = useRecoilState(passwordAtom);
+  const [firstName, setFirstName] = useRecoilState(firstNameAtom);
+  const [lastName, setLastName] = useRecoilState(lastNameAtom);
+
+
+  useEffect(()=>{
+
+  },[username , password , firstName , lastName])
+
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -10,7 +23,7 @@ const Signup = () => {
               Register
             </h1>
             <form className="space-y-4 md:space-y-6" action="#">
-            <div>
+              <div>
                 <label
                   htmlFor="first_name"
                   className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -24,6 +37,8 @@ const Signup = () => {
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="John"
                   required=""
+                  onChange={(e)=>{setFirstName(e.target.value)}}
+                  value={firstName}
                 />
               </div>
               <div>
@@ -40,6 +55,8 @@ const Signup = () => {
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Adam"
                   required=""
+                  onChange={(e)=>{setLastName(e.target.value)}}
+                  value={lastName}
                 />
               </div>
               <div>
@@ -56,6 +73,8 @@ const Signup = () => {
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="name@company.com"
                   required=""
+                  onChange={(e)=>{setUsername(e.target.value)}}
+                  value={username}
                 />
               </div>
               <div>
@@ -72,6 +91,8 @@ const Signup = () => {
                   placeholder="••••••••"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required=""
+                  onChange={(e)=>{setPassword(e.target.value)}}
+                  value={password}
                 />
               </div>
               <div className="flex items-start">
@@ -107,7 +128,12 @@ const Signup = () => {
               </button>
               <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                 Already have an account?{" "}
-                <Link to="/signin" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Login</Link>
+                <Link
+                  to="/signin"
+                  className="font-medium text-primary-600 hover:underline dark:text-primary-500"
+                >
+                  Login
+                </Link>
               </p>
             </form>
           </div>

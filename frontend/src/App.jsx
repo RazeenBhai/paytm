@@ -4,9 +4,11 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
 import Signin from "./components/Signin";
 import Signup from "./components/Signup";
+import { RecoilRoot } from "recoil";
 function App() {
   return (
     <>
+    <RecoilRoot>
       <BrowserRouter>
         <Routes>
           {/* <Route path="/" element={<Home />} /> */}
@@ -15,6 +17,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </BrowserRouter>
+    </RecoilRoot>
     </>
   );
 }
