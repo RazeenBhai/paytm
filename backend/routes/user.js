@@ -67,6 +67,39 @@ const signinBody = zod.object({
   password: zod.string(),
 });
 
+router.get("/me", authMiddleware, async (req, res) => {
+  try {
+    const id = req.headers.userId;
+    const user = await User.find(id);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    // // Optionally, you can filter and send only specific user information
+    // const userInformation = {
+    const _id = await user._id;
+    const username = await user.username;
+    const firstName = await user.firstName;
+    // };
+
+    console.log(user);
+
+    res.json({
+      id: _id,
+      username: username,
+      firstName: firstName,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+});
+
 router.post("/signin", async (req, res) => {
   const { success } = signinBody.safeParse(req.body);
   if (!success) {

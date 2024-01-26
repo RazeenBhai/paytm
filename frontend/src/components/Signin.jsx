@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { passwordAtom, usernameAtom } from "../store";
 import { useRecoilState } from "recoil";
 import axios from "axios";
@@ -8,6 +8,7 @@ const Signin = () => {
   const [password, setPassword] = useRecoilState(passwordAtom);
 
   const token = localStorage.getItem('token');
+  const navigate = useNavigate();
 
 
   const handleSubmit = (e) => {
@@ -21,10 +22,12 @@ const Signin = () => {
     axios.post("http://localhost:3000/api/v1/user/signin", json, {
       headers: {
         "Content-Type": "application/json",
-        "Authorization" : `Bearer ${token}`
+        "Authorization" : `${token}`
       },
     }).then((response)=>{
-      console.log(response);
+      // console.log(response);
+
+      navigate('/dashboard')
     })
   };
 

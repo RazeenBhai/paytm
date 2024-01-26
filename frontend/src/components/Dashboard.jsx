@@ -1,10 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { RiDashboardFill } from "react-icons/ri";
 import { IoHomeSharp } from "react-icons/io5";
 import { FaMoneyCheck } from "react-icons/fa";
 import { TbLogout2 } from "react-icons/tb";
 import { RxAvatar } from "react-icons/rx";
+
+import axios from "axios";
 const Dashboard = () => {
+
+  const [user, setUser] = useState({})
+
+  useEffect(()=>{
+
+    const token = localStorage.getItem(token)
+    axios.get("http://localhost:3000/api/v1/user/", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${token}`,
+      },
+    })
+  })
+
+
+
   return (
     <div className="bg-blue-600">
       <div className="sidebar fixed top-0 bottom-0 lg:left-0 p-2 w-[300px] overflow-y-auto text-center bg-gray-900">
@@ -44,7 +62,7 @@ const Dashboard = () => {
       </div>
       <div className="w-[calc(100%-300px)] fixed p-2 overflow-y-auto right-0 h-[100vh] bg-gray-200">
         <div className="p-2 h-[70px] bg-gray-300 right-0">
-          <span className="  flex align-middle text-gray-900"> <RxAvatar /> Hello, Razeen</span>
+          <span className="  flex align-middle text-gray-900"> <RxAvatar className=" size-10 " /> Hello, Razeen</span>
         </div>
       </div>
     </div>
