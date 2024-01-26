@@ -1,18 +1,42 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { firstNameAtom, lastNameAtom, passwordAtom, usernameAtom } from "../store";
+import {
+  firstNameAtom,
+  lastNameAtom,
+  passwordAtom,
+  usernameAtom,
+} from "../store";
 import { useRecoilState } from "recoil";
-const Signup = () => {
+import axios from "axios";
 
+const Signup = () => {
   const [username, setUsername] = useRecoilState(usernameAtom);
   const [password, setPassword] = useRecoilState(passwordAtom);
   const [firstName, setFirstName] = useRecoilState(firstNameAtom);
   const [lastName, setLastName] = useRecoilState(lastNameAtom);
 
+  const handleSubmit = async (e) => {
+    const json = JSON.stringify({
+      username: username,
+      password: password,
+      firstName: firstName,
+      lastName: lastName,
+    });
+    e.preventDefault();
+    const res = await axios
+      .post("http://localhost:3000/api/v1/user/signup", json, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        // Assuming the server responds with a token in the 'token' property of the response
+        const tokenFromServer = response.data.token;
 
-  useEffect(()=>{
-
-  },[username , password , firstName , lastName])
+        // Store the token in localStorage
+        localStorage.setItem("token", `Bearer ${tokenFromServer}`);
+      });
+  };
 
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
@@ -22,7 +46,11 @@ const Signup = () => {
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
               Register
             </h1>
-            <form className="space-y-4 md:space-y-6" action="#">
+            <form
+              className="space-y-4 md:space-y-6"
+              action="#"
+              onSubmit={handleSubmit}
+            >
               <div>
                 <label
                   htmlFor="first_name"
@@ -37,7 +65,9 @@ const Signup = () => {
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="John"
                   required=""
-                  onChange={(e)=>{setFirstName(e.target.value)}}
+                  onChange={(e) => {
+                    setFirstName(e.target.value);
+                  }}
                   value={firstName}
                 />
               </div>
@@ -55,7 +85,9 @@ const Signup = () => {
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Adam"
                   required=""
-                  onChange={(e)=>{setLastName(e.target.value)}}
+                  onChange={(e) => {
+                    setLastName(e.target.value);
+                  }}
                   value={lastName}
                 />
               </div>
@@ -73,7 +105,9 @@ const Signup = () => {
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="name@company.com"
                   required=""
-                  onChange={(e)=>{setUsername(e.target.value)}}
+                  onChange={(e) => {
+                    setUsername(e.target.value);
+                  }}
                   value={username}
                 />
               </div>
@@ -91,7 +125,9 @@ const Signup = () => {
                   placeholder="••••••••"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   required=""
-                  onChange={(e)=>{setPassword(e.target.value)}}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                  }}
                   value={password}
                 />
               </div>
@@ -107,7 +143,7 @@ const Signup = () => {
                 </div>
                 <div className="ml-3 text-sm">
                   <label
-                    for="terms"
+                    htmlFor="terms"
                     className="font-light text-gray-500 dark:text-gray-300"
                   >
                     I accept the{" "}

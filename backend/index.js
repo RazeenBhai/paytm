@@ -4,7 +4,7 @@ const accountRouter = require("./routes/account");
 const cors = require("cors");
 const app = express();
 
-app.use(cors());
+app.use(cors('https://localhost:5173/'));
 app.use(express.json());
 
 
