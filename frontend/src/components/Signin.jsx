@@ -25,7 +25,14 @@ const Signin = () => {
         "Authorization" : `${token}`
       },
     }).then((response)=>{
-      // console.log(response);
+      console.log(response);
+
+      localStorage.setItem('userId', response.data.userId);
+      // Assuming the server responds with a token in the 'token' property of the response
+      const tokenFromServer = response.data.token;
+
+      // Store the token in localStorage
+      localStorage.setItem("token", `Bearer ${tokenFromServer}`);
 
       navigate('/dashboard')
     })

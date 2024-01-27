@@ -69,8 +69,19 @@ const signinBody = zod.object({
 
 router.get("/me", authMiddleware, async (req, res) => {
   try {
-    const id = req.headers.userId;
-    const user = await User.find(id);
+    const token = await req.headers.authorization;
+
+    const finalToken = token.split(" ")[1];
+
+    if (!finalToken) {
+      return res.status(401).json({
+        message: "Invalid Authorization header format",
+      });
+    }
+
+    const decodedJwt = await jwt.verify(finalToken, JWT_SECRET);
+
+    const user = await User.findById(decodedJwt.userId);
 
     if (!user) {
       return res.status(404).json({
@@ -78,19 +89,12 @@ router.get("/me", authMiddleware, async (req, res) => {
       });
     }
 
-    // // Optionally, you can filter and send only specific user information
-    // const userInformation = {
-    const _id = await user._id;
-    const username = await user.username;
-    const firstName = await user.firstName;
-    // };
-
     console.log(user);
 
     res.json({
-      id: _id,
-      username: username,
-      firstName: firstName,
+      userId: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
     });
   } catch (error) {
     console.error(error);
@@ -121,7 +125,10 @@ router.post("/signin", async (req, res) => {
       JWT_SECRET
     );
 
+    const id = await user._id;
+
     res.json({
+      userId: id,
       token: token,
     });
     return;
