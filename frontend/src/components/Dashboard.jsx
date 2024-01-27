@@ -10,16 +10,16 @@ const Dashboard = () => {
 
   const [user, setUser] = useState({})
 
-  useEffect(()=>{
+  // useEffect(()=>{
 
-    const token = localStorage.getItem(token)
-    axios.get("http://localhost:3000/api/v1/user/", {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `${token}`,
-      },
-    })
-  })
+  //   const token = localStorage.getItem(token)
+  //   axios.get("http://localhost:3000/api/v1/user/", {
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Authorization: `${token}`,
+  //     },
+  //   })
+  // })
 
 
 
