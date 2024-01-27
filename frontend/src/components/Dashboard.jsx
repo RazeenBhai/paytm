@@ -7,69 +7,99 @@ import { RxAvatar } from "react-icons/rx";
 
 import axios from "axios";
 const Dashboard = () => {
+  const [user, setUser] = useState("");
+  const [balance, setBalance] = useState("");
+  const token = localStorage.getItem("token");
 
-  const [user, setUser] = useState({})
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/api/v1/user/me", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      })
+      .then((response) => {
+        // console.log(response.data);
+        setUser(response.data.firstName);
+      });
+  }, []);
 
-  useEffect(()=>{
-
-    const token = localStorage.getItem(token)
-    axios.get("http://localhost:3000/api/v1/user/me", {
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `${token}`,
-      },
-    }).then((response) => {
-      finaldata = JSON.stringify(response.data);
-
-      console.log(finaldata)
-    })
-  })
-
-
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/api/v1/account/balance", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
+        },
+      })
+      .then((response) => {
+        setBalance(response.data.balance);
+      });
+  }, []);
 
   return (
-    <div className="bg-blue-600">
-      <div className="sidebar fixed top-0 bottom-0 lg:left-0 p-2 w-[300px] overflow-y-auto text-center bg-gray-900">
-        <div className="text-gray-100 text-xl">
-          <div className="p-2.5 mt-1 flex items-center">
-            <RiDashboardFill />
-            <h1 className="font-bold text-gray-200 text-[15px] ml-3">
-              Dashboard
-            </h1>
-          </div>
-          <div className="my-2 bg-gray-600 h-[1px]"></div>
+    <>
+      <div className="navbar bg-base-100">
+        <div className="flex-none">
+          <label htmlFor="my-drawer" className="btn btn-primary drawer-button">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              className="inline-block w-5 h-5 stroke-current"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              ></path>
+            </svg>
+          </label>
         </div>
-        <div className="p-2.5 flex items-center rounded-md px-4 duration-300 cursor-pointer bg-gray-700 text-white">
-          <input
-            type="text"
-            placeholder="Search"
-            className="text-[15px] ml-4 w-full bg-transparent focus:outline-none"
-          />
+        <div className="flex-1">
+          <a className="btn btn-ghost text-xl">Dashboard</a>
         </div>
-        <div className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
-          <IoHomeSharp />
-          <span className="text-[15px] ml-4 text-gray-200 font-bold">Home</span>
-        </div>
-        <div className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
-          <FaMoneyCheck />
-          <span className="text-[15px] ml-4 text-gray-200 font-bold">
-            Payments
-          </span>
-        </div>
-        <div className="my-4 bg-gray-600 h-[1px]"></div>
-        <div className="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white">
-          <TbLogout2 />
-          <span className="text-[15px] ml-4 text-gray-200 font-bold">
-            Logout
-          </span>
+        <div className="flex-none">
+          <button className="btn btn-square btn-ghost">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              className="inline-block w-5 h-5 stroke-current"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
+              ></path>
+            </svg>
+          </button>
         </div>
       </div>
-      <div className="w-[calc(100%-300px)] fixed p-2 overflow-y-auto right-0 h-[100vh] bg-gray-200">
-        <div className="p-2 h-[70px] bg-gray-300 right-0">
-          <span className="  flex align-middle text-gray-900"> <RxAvatar className=" size-10 " /> Hello, Razeen</span>
+      <div className="drawer">
+        <input id="my-drawer" type="checkbox" className="drawer-toggle" />
+        <div className="drawer-content">{/* Page content here */}</div>
+        <div className="drawer-side">
+          <label
+            htmlFor="my-drawer"
+            aria-label="close sidebar"
+            className="drawer-overlay"
+          ></label>
+          <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
+            {/* Sidebar content here */}
+            <li>
+              <a>Sidebar Item 1</a>
+            </li>
+            <li>
+              <a>Sidebar Item 2</a>
+            </li>
+          </ul>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
