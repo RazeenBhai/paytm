@@ -38,6 +38,13 @@ const Dashboard = () => {
       });
   }, []);
 
+  useEffect(()=> {
+    axios.get("http://localhost:3000/api/v1/user/bulk")
+    .then((response) => {
+      
+    })
+  },[])
+
   return (
     <>
       <div className="navbar bg-base-100">
@@ -62,6 +69,7 @@ const Dashboard = () => {
           <a className="btn btn-ghost text-xl">Dashboard</a>
         </div>
         <div className="flex-none">
+          Hello, {user}
           <button className="btn btn-square btn-ghost">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -78,10 +86,13 @@ const Dashboard = () => {
             </svg>
           </button>
         </div>
+
       </div>
       <div className="drawer">
         <input id="my-drawer" type="checkbox" className="drawer-toggle" />
-        <div className="drawer-content">{/* Page content here */}</div>
+        <div className="drawer-content w-[100%] flex items-center justify-center">
+          <input type="text" placeholder="Search for Users" className="flex justify-center input input-bordered w-full max-w-xs" />
+        </div>
         <div className="drawer-side">
           <label
             htmlFor="my-drawer"
@@ -91,12 +102,16 @@ const Dashboard = () => {
           <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
             {/* Sidebar content here */}
             <li>
-              <a>Sidebar Item 1</a>
+              <a>Your Balance</a>
             </li>
             <li>
-              <a>Sidebar Item 2</a>
+              <a className=" text-3xl" >
+              {balance}
+              </a>
             </li>
           </ul>
+        </div>
+        <div className="w-[100%] flex items-center justify-center" >
         </div>
       </div>
     </>
