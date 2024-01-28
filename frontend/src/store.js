@@ -16,3 +16,14 @@ export const lastNameAtom = atom({
   key: "lastNameAtom",
   default: "",
 });
+
+
+export const sendAmountAtom = atom({
+  key: "sendAmountAtom",
+  default: 0,
+})
+
+export const sendUserAtom = atom({
+  key: "sendUser",
+  default: "",
+})

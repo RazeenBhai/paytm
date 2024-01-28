@@ -89,8 +89,6 @@ router.get("/me", authMiddleware, async (req, res) => {
       });
     }
 
-    console.log(user);
-
     res.json({
       userId: user._id,
       firstName: user.firstName,

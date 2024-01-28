@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { RiDashboardFill } from "react-icons/ri";
-import { IoHomeSharp } from "react-icons/io5";
-import { FaMoneyCheck } from "react-icons/fa";
-import { TbLogout2 } from "react-icons/tb";
-import { RxAvatar } from "react-icons/rx";
-
+import User from "./User";
 import axios from "axios";
+import { useRecoilValue } from "recoil";
+import { sendAmountAtom, sendUserAtom } from "../store";
+import { useNavigate } from "react-router-dom";
 const Dashboard = () => {
   const [user, setUser] = useState("");
   const [balance, setBalance] = useState("");
+  const [searchUser, setSearchUser] = useState([]);
+  const [filter, setFilter] = useState("");
   const token = localStorage.getItem("token");
+  const sendAmount = useRecoilValue(sendAmountAtom);
+  const sendUser = useRecoilValue(sendUserAtom);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -20,7 +23,6 @@ const Dashboard = () => {
         },
       })
       .then((response) => {
-        // console.log(response.data);
         setUser(response.data.firstName);
       });
   }, []);
@@ -34,16 +36,43 @@ const Dashboard = () => {
         },
       })
       .then((response) => {
-        setBalance(response.data.balance);
+        let userBalance = response.data.balance.toFixed(2);
+        setBalance(userBalance);
       });
-  }, []);
+  }, [balance]);
 
-  useEffect(()=> {
-    axios.get("http://localhost:3000/api/v1/user/bulk")
-    .then((response) => {
-      
-    })
-  },[])
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const response = await axios.get(
+        "http://localhost:3000/api/v1/user/bulk",
+        {
+          params: {
+            filter: filter,
+          },
+        }
+      );
+      setSearchUser(response.data.user);
+      // console.log(response.data.user)
+    };
+
+    fetchUsers();
+  }, [filter]);
+
+  const sendAmountToUser = async () => {
+    axios.post(
+      "http://localhost:3000/api/v1/account/transfer",
+      {
+        amount: sendAmount,
+        to: sendUser,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      }
+    );
+  };
 
   return (
     <>
@@ -86,12 +115,20 @@ const Dashboard = () => {
             </svg>
           </button>
         </div>
-
       </div>
       <div className="drawer">
         <input id="my-drawer" type="checkbox" className="drawer-toggle" />
-        <div className="drawer-content w-[100%] flex items-center justify-center">
-          <input type="text" placeholder="Search for Users" className="flex justify-center input input-bordered w-full max-w-xs" />
+        <div className="drawer-content h-[100vh] w-[100%] flex flex-col items-center gap-5 ">
+          <input
+            type="text"
+            placeholder="Search for Users"
+            value={filter}
+            onChange={(e) => {
+              setFilter(e.target.value);
+            }}
+            className="flex justify-center input input-bordered w-full max-w-xs"
+          />
+          <User searchUser={searchUser} sendAmountToUser={sendAmountToUser} />
         </div>
         <div className="drawer-side">
           <label
@@ -105,14 +142,11 @@ const Dashboard = () => {
               <a>Your Balance</a>
             </li>
             <li>
-              <a className=" text-3xl" >
-              {balance}
-              </a>
+              <a className=" stat-value">{balance}</a>
             </li>
           </ul>
         </div>
-        <div className="w-[100%] flex items-center justify-center" >
-        </div>
+        <div className="w-[100%] flex items-center justify-center"></div>
       </div>
     </>
   );
