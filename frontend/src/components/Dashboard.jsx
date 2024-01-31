@@ -74,6 +74,13 @@ const Dashboard = () => {
     );
   };
 
+
+  const LogoutSession = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    navigate("/signin");
+  }
+
   return (
     <>
       <div className="navbar bg-base-100">
@@ -144,6 +151,7 @@ const Dashboard = () => {
             <li>
               <a className=" stat-value">{balance}</a>
             </li>
+            <li className="logout mt-[auto]" onClick={LogoutSession}  ><a>Logout</a></li>
           </ul>
         </div>
         <div className="w-[100%] flex items-center justify-center"></div>
