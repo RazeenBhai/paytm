@@ -25,6 +25,10 @@ const Dashboard = () => {
       .then((response) => {
         setUser(response.data.firstName);
       });
+
+    if (response.data.status === 403) {
+      navigate("/signin");
+    }
   }, []);
 
   useEffect(() => {
@@ -74,12 +78,11 @@ const Dashboard = () => {
     );
   };
 
-
   const LogoutSession = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     navigate("/signin");
-  }
+  };
 
   return (
     <>
@@ -149,9 +152,11 @@ const Dashboard = () => {
               <a>Your Balance</a>
             </li>
             <li>
-              <a className=" stat-value">{balance}</a>
+              <a className=" stat-value">{"$" + balance}</a>
             </li>
-            <li className="logout mt-[auto]" onClick={LogoutSession}  ><a>Logout</a></li>
+            <li className="logout mt-[auto]" onClick={LogoutSession}>
+              <a>Logout</a>
+            </li>
           </ul>
         </div>
         <div className="w-[100%] flex items-center justify-center"></div>

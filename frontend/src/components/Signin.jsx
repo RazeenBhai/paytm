@@ -45,7 +45,7 @@ const Signin = () => {
       navigateToDashboard();
     }
 
-    if (response.status === 411) {
+    if (response.data.status === 411) {
       setError("Invalid Username or Password");
     }
   };
