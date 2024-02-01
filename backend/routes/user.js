@@ -74,7 +74,7 @@ router.get("/me", authMiddleware, async (req, res) => {
     const finalToken = token.split(" ")[1];
 
     if (!finalToken) {
-      return res.status(401).json({
+      return res.status(401).send({
         message: "Invalid Authorization header format",
       });
     }
@@ -105,7 +105,7 @@ router.get("/me", authMiddleware, async (req, res) => {
 router.post("/signin", async (req, res) => {
   const { success } = signinBody.safeParse(req.body);
   if (!success) {
-    return res.status(420).json({
+    return res.status(420).send.json({
       message: "Email already taken / Incorrect inputs",
     });
   }
@@ -132,7 +132,7 @@ router.post("/signin", async (req, res) => {
     return;
   }
 
-  res.status(411).json({
+  res.status(421).json({
     message: "Error while logging in",
   });
 });

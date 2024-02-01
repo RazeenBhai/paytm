@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { passwordAtom, usernameAtom } from "../store";
 import { useRecoilState } from "recoil";
@@ -6,11 +6,27 @@ import axios from "axios";
 const Signin = () => {
   const [username, setUsername] = useRecoilState(usernameAtom);
   const [password, setPassword] = useRecoilState(passwordAtom);
+  const [error, setError] = useState("");
 
-  const [Error, setError] = useState("");
+  const errorRef = useRef()
 
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/api/v1/user/me", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: localStorage.getItem("token"),
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          navigate("/dashboard");
+        }
+      });
+  }, []);
 
   const navigateToDashboard = () => {
     navigate("/dashboard");
@@ -18,36 +34,31 @@ const Signin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const json = JSON.stringify({
       username: username,
       password: password,
     });
 
-    let response = await axios.post(
-      "http://localhost:3000/api/v1/user/signin",
-      json,
-      {
+    axios
+      .post("http://localhost:3000/api/v1/user/signin", json, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `${token}`,
         },
-      }
-    );
-    if (response.status === 200) {
-      localStorage.setItem("userId", response.data.userId);
-      // Assuming the server responds with a token in the 'token' property of the response
-      const tokenFromServer = response.data.token;
+      })
+      .then((response) => {
+        localStorage.setItem("userId", response.data.userId);
+        // Assuming the server responds with a token in the 'token' property of the response
+        const tokenFromServer = response.data.token;
 
-      // Store the token in localStorage
-      localStorage.setItem("token", `Bearer ${tokenFromServer}`);
+        // Store the token in localStorage
+        localStorage.setItem("token", `Bearer ${tokenFromServer}`);
 
-      navigateToDashboard();
-    }
-
-    if (response.data.status === 411) {
-      setError("Invalid Username or Password");
-    }
+        navigateToDashboard();
+      })
+      .catch((error) => {
+        alert(error.response.data.message)
+      })
   };
 
   return (
@@ -121,25 +132,6 @@ const Signin = () => {
             </form>
           </div>
         </div>
-      </div>
-      <div
-        role="alert"
-        className="alert alert-error fixed top-[10%] left-[50%] translate-x-[-50%] translate-y-[-0%] w-96"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="stroke-current shrink-0 h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </svg>
-        <span>{Error}</span>
       </div>
     </section>
   );

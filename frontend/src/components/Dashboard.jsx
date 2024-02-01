@@ -24,11 +24,11 @@ const Dashboard = () => {
       })
       .then((response) => {
         setUser(response.data.firstName);
-      });
-
-    if (response.data.status === 403) {
-      navigate("/signin");
-    }
+      })
+      .catch((error) => {
+        console.log(error);
+        navigate("/signin");
+      })
   }, []);
 
   useEffect(() => {
